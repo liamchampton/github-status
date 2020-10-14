@@ -9,6 +9,7 @@ import (
 	"os"
 )
 
+// Response struct will pick out the elements of JSON I want to display
 type Response struct {
 	Components []struct {
 		Name   string `json:"name"`
