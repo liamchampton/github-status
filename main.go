@@ -23,6 +23,15 @@ type Response struct {
 }
 
 func main() {
+	// Create the route handler listening on '/'
+	http.HandleFunc("/", Home)
+	fmt.Println("Starting server on port 8080")
+
+	// Start the sever
+	http.ListenAndServe(":8080", nil)
+}
+
+func Home(w http.ResponseWriter, r *http.Request) {
 	response, err := http.Get("https://kctbh9vrtdwd.statuspage.io/api/v2/summary.json")
 
 	if err != nil {
@@ -47,6 +56,9 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println(byteBuffer.String())
+	// Use for console printing / debugging
+	// fmt.Println(byteBuffer.String())
 
+	// Write the response to the byte array - Sprintf formats and returns a string without printing it anywhere
+	w.Write([]byte(fmt.Sprintf(byteBuffer.String())))
 }
