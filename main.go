@@ -44,6 +44,8 @@ func Home(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
+	defer response.Body.Close()
+
 	var responseObject Response
 	json.Unmarshal(responseData, &responseObject)
 
