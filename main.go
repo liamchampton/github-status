@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -12,8 +13,9 @@ import (
 // Response struct will pick out the elements of JSON I want to display
 type Response struct {
 	Components []struct {
-		Name   string `json:"name"`
-		Status string `json:"status"`
+		Name        string `json:"name"`
+		Description string `json:"description"`
+		Status      string `json:"status"`
 	}
 	Status struct {
 		Description string `json:"description"`
@@ -36,6 +38,15 @@ func main() {
 	var responseObject Response
 	json.Unmarshal(responseData, &responseObject)
 
-	fmt.Println(responseObject)
+	// Pretty-print the json
+	responseBodyBytes := new(bytes.Buffer)
+	json.NewEncoder(responseBodyBytes).Encode(responseObject)
+	byteArray := []byte(responseBodyBytes.Bytes())
+	byteBuffer := &bytes.Buffer{}
+	if err := json.Indent(byteBuffer, byteArray, "", "  "); err != nil {
+		panic(err)
+	}
+
+	fmt.Println(byteBuffer.String())
 
 }
