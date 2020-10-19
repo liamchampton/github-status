@@ -22,7 +22,7 @@ type Response struct {
 	}
 }
 
-func main() {
+func SetUpRoutes() {
 	// Create the route handler listening on '/'
 	http.HandleFunc("/", Home)
 	fmt.Println("Starting server on port 8080")
@@ -31,7 +31,12 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 }
 
+func main() {
+	SetUpRoutes()
+}
+
 func Home(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Calling GitHub API for Data")
 	response, err := http.Get("https://kctbh9vrtdwd.statuspage.io/api/v2/summary.json")
 
 	if err != nil {
@@ -53,14 +58,15 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	responseBodyBytes := new(bytes.Buffer)
 	json.NewEncoder(responseBodyBytes).Encode(responseObject)
 	byteArray := []byte(responseBodyBytes.Bytes())
-	byteBuffer := &bytes.Buffer{}
-	if err := json.Indent(byteBuffer, byteArray, "", "  "); err != nil {
-		panic(err)
-	}
+	// byteBuffer := &bytes.Buffer{}
+	// if err := json.Indent(byteBuffer, byteArray, "", "  "); err != nil {
+	// 	panic(err)
+	// }
 
 	// Use for console printing / debugging
 	// fmt.Println(byteBuffer.String())
 
 	// Write the response to the byte array - Sprintf formats and returns a string without printing it anywhere
-	w.Write([]byte(fmt.Sprintf(byteBuffer.String())))
+	// w.Write([]byte(fmt.Sprintf(byteBuffer.String())))
+	w.Write(byteArray)
 }
